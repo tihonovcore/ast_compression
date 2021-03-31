@@ -44,3 +44,16 @@ fun compress(root: KotlinParseTree, mostPopular: String): KotlinParseTree {
         children.addAll(compressed)
     }
 }
+
+fun makeNCompression(tree: KotlinParseTree, n: Int): KotlinParseTree {
+    var newTree = tree
+    for (i in 0 until n) {
+        try {
+            newTree = compress(newTree, findMostPopular(newTree))
+        } catch (_: MaxCompression) {
+            break
+        }
+    }
+
+    return newTree
+}

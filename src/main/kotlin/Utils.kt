@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.spec.grammar.tools.KotlinParseTree
 import org.jetbrains.kotlin.spec.grammar.tools.KotlinParseTreeNodeType
 import org.jetbrains.kotlin.spec.grammar.tools.parseKotlinCode
 import org.jetbrains.kotlin.spec.grammar.tools.tokenizeKotlinCode
+import java.io.File
 
 fun parse(sourceCode: String): KotlinParseTree {
     //NOTE: "root" is wrapper for "file" in case it turns into a forest.
@@ -37,4 +38,8 @@ infix fun KotlinParseTree.with(other: KotlinParseTree): String {
     assert(name() != "root")
 
     return name() + "_" + other.name()
+}
+
+fun File.isNotKtFile(): Boolean {
+    return !name.endsWith(".kt")
 }

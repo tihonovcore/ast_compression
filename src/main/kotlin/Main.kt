@@ -3,6 +3,7 @@ import java.io.File
 fun main() = with(Configuration) {
     File(sourceDirectory).walk().forEach {
         if (it.isDirectory) return@forEach
+        if (it.isNotKtFile()) return@forEach
 
         val tree = parse(it.readText())
         val compressedTree = makeNCompression(tree, nCompressions)
@@ -21,6 +22,7 @@ fun main() = with(Configuration) {
 
         if (saveToFile) {
             File(outputFile).apply {
+                parentFile.mkdirs()
                 if (!exists()) createNewFile()
 
                 appendText(it.path)

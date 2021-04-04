@@ -58,4 +58,46 @@ class TestCompress : TestCase() {
             assertEquals("a", single().children.single().name())
         }
     }
+
+    @Test
+    fun testNCompression() {
+        val b4 = new("b")
+        val c4 = new("c")
+        val a3 = new("a", b4, c4)
+        val b2_fst = new("b", a3)
+        val b2_snd = new("b")
+        val c2 = new("c")
+        val a1 = new("a", b2_fst, b2_snd, c2)
+        val root = new("root", a1)
+
+        val compressed = makeNCompression(root, 2)
+        with(compressed.children) {
+            assertEquals(3, size)
+            assertEquals(listOf("a_b", "a_b", "a_c"), map { it.name() })
+            assertEquals(2, get(0).children.size)
+            assertEquals(0, get(1).children.size)
+            assertEquals(0, get(2).children.size)
+            assertEquals(listOf("a_b", "a_c"), first().children.map { it.name() })
+            assertEquals(0, first().children.first().children.size)
+            assertEquals(0, first().children.last().children.size)
+        }
+    }
+
+    @Test
+    fun testSameChildren() {
+        val b1 = new("b")
+        val b2 = new("b")
+        val a = new("a", b1, b2)
+        val root = new("root", a)
+
+        val compressed = compress(root, "a_b")
+        assertEquals("root", compressed.name())
+        with(compressed.children) {
+            assertEquals(2, size)
+            assertEquals("a_b", first().name())
+            assertEquals(0, first().children.size)
+            assertEquals("a_b", last().name())
+            assertEquals(0, last().children.size)
+        }
+    }
 }

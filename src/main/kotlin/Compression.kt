@@ -27,7 +27,10 @@ fun compress(root: KotlinParseTree, mostPopular: String): KotlinParseTree {
     fun compress(tree: KotlinParseTree): List<KotlinParseTree> {
         val (toCompress, newChildren) = tree.children.partition { mostPopular == tree with it }
 
-        val compressed = toCompress.map { new(tree with it, *it.children.toTypedArray()) }
+        val compressed = toCompress
+            .map { new(tree with it, *it.children.toTypedArray()) }
+            .flatMap { compress(it) }
+
         if (toCompress.isNotEmpty() && newChildren.isEmpty()) {
             return compressed
         }

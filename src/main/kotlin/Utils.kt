@@ -4,14 +4,19 @@ import org.jetbrains.kotlin.spec.grammar.tools.parseKotlinCode
 import org.jetbrains.kotlin.spec.grammar.tools.tokenizeKotlinCode
 import java.io.File
 
-fun parse(sourceCode: String): KotlinParseTree {
+fun parseAll(sourceFiles: List<String>): KotlinParseTree {
     //NOTE: "root" is wrapper for "file" in case it turns into a forest.
     //"root" should never compressed
 
-    val tokens = tokenizeKotlinCode(sourceCode)
-    val parseTree = parseKotlinCode(tokens)
-    return new("root", parseTree)
+    val trees = sourceFiles
+        .map { sourceCode -> tokenizeKotlinCode(sourceCode) }
+        .map { tokens -> parseKotlinCode(tokens) }
+        .toTypedArray()
+
+    return new("root", *trees)
 }
+
+fun parse(sourceCode: String): KotlinParseTree = parseAll(listOf(sourceCode))
 
 /**
  * Return name of node
@@ -42,4 +47,28 @@ infix fun KotlinParseTree.with(other: KotlinParseTree): String {
 
 fun File.isNotKtFile(): Boolean {
     return !name.endsWith(".kt")
+}
+
+fun Configuration.makeOutput(tree: KotlinParseTree, compressedTree: KotlinParseTree) {
+    if (printTreeBefore) {
+        println("###################")
+        println(tree)
+    }
+    if (printTreeAfter) {
+        println("###################")
+        println(compressedTree)
+    }
+    println("###################")
+    println("\n\n\n")
+
+    if (saveToFile) {
+        File(outputFile).apply {
+            parentFile.mkdirs()
+            if (!exists()) createNewFile()
+
+            appendText("\n###################\n")
+            appendText(compressedTree.toString())
+            appendText("\n\n\n")
+        }
+    }
 }

@@ -10,5 +10,7 @@ There are next properties:
 * `printTreeBefore` - if set `true`, application will print AST before compression (`true` by default)
 * `printTreeAfter` - if set `true`, application will print AST after compression (`true` by default)
 * `saveToFile` - if set `true`, compressed AST will save to `outputFile` (`true` by default)
+* `compressFilesSeparately` - if set `true`, files will be compressed separately, otherwise all files will 
+  be interpreted as one big AST and compressed together (`true` by default)  
 
 You may change any of these properties.

@@ -5,4 +5,5 @@ object Configuration {
     const val printTreeBefore: Boolean = true
     const val printTreeAfter: Boolean = true
     const val saveToFile: Boolean = true
+    const val compressFilesSeparately: Boolean = true
 }

@@ -100,4 +100,22 @@ class TestCompress : TestCase() {
             assertEquals(0, last().children.size)
         }
     }
+
+    @Test
+    fun testFewFilesCompression() {
+        val a1 = new("a")
+        val a2 = new("a")
+        val b = new("b")
+        val file1 = new("file", a1)
+        val file2 = new("file", a2, b)
+        val root = new("root", file1, file2)
+
+        val compressed = makeNCompression(root, 30)
+        assertEquals("root", compressed.name())
+        with(compressed.children) {
+            assertEquals(3, size)
+            assertEquals(listOf("file_a", "file_a", "file_b"), map { it.name() })
+            assertTrue(all { it.children.isEmpty() })
+        }
+    }
 }

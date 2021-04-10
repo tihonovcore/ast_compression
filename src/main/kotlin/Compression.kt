@@ -52,6 +52,8 @@ fun makeNCompression(tree: KotlinParseTree, n: Int): KotlinParseTree {
     var newTree = tree
     for (i in 0 until n) {
         try {
+            //TODO: need find way to recalculate statistics, especially for
+            // compressing a lot files together
             newTree = compress(newTree, findMostPopular(newTree))
         } catch (_: MaxCompression) {
             break
